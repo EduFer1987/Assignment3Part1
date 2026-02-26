@@ -100,7 +100,7 @@ else
 fi
 
 for lib in "${SHARED[@]}"; do
-  src=$(find "${COMPILER_DIR}" -type f -name *$lib* 2>/dev/null | head -n1)
+  src=$(find "${COMPILER_DIR}/.." -type f -name *$lib* 2>/dev/null | head -n1)
   echo $src
   if [ -n "$src" ]; then
     echo "Copying $src -> ${OUTDIR}/rootfs/lib"
