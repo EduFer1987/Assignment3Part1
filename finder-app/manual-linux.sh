@@ -92,28 +92,29 @@ SHARED=($(${CROSS_COMPILE}readelf -d busybox | awk -F'[][]' '/NEEDED/ {print $2}
 echo "interp: ${interp} "
 echo "SHARED: ${SHARED} "
 
+find / -type f -name $interp
 for lib in "${SHARED[@]}"; do
   find / -type f -name *$lib*
   find / -type f -name *aarch64*
 done
 
 # TODO: Add library dependencies to rootfs
-if [ -f ${COMPILER_DIR}${interp} ]
+if [ -f /usr/local/arm-cross-compiler/install/arm-gnu-toolchain-13.3.rel1-x86_64-aarch64-none-linux-gnu/aarch64-none-linux-gnu/libc/${interp} ]
 then
   echo "Copying ${interp} in  ${OUTDIR}/rootfs/lib"
-  sudo cp ${COMPILER_DIR}${interp}  ${OUTDIR}/rootfs/lib
+  sudo cp /usr/local/arm-cross-compiler/install/arm-gnu-toolchain-13.3.rel1-x86_64-aarch64-none-linux-gnu/aarch64-none-linux-gnu/libc/${interp}  ${OUTDIR}/rootfs/lib
 else
-  echo "Error file ${COMPILER_DIR}${interp}not found"
+  echo "Error file /usr/local/arm-cross-compiler/install/arm-gnu-toolchain-13.3.rel1-x86_64-aarch64-none-linux-gnu/aarch64-none-linux-gnu/libc/lib64/${interp}not found"
 fi
 
 for lib in "${SHARED[@]}"; do
-  src=$(find "${COMPILER_DIR}/.." -type f -name *$lib* 2>/dev/null | head -n1)
+  src=$(find  /usr/local/arm-cross-compiler/install/arm-gnu-toolchain-13.3.rel1-x86_64-aarch64-none-linux-gnu/aarch64-none-linux-gnu/libc/lib64 -type f -name *$lib* 2>/dev/null | head -n1)
   echo $src
   if [ -n "$src" ]; then
-    echo "Copying $src -> ${OUTDIR}/rootfs/lib"
-    sudo cp -a "$src" "${OUTDIR}/rootfs/lib"
+    echo "Copying $src -> ${OUTDIR}/rootfs/lib64"
+    sudo cp -a "$src" "${OUTDIR}/rootfs/lib64"
   else
-    echo "ERROR: cannot find $lib under ${OUTDIR}/rootfs/lib src:$src" >&2
+    echo "ERROR: cannot find $lib under ${OUTDIR}/rootfs/lib64 src:$src" >&2
   fi
 done
 
