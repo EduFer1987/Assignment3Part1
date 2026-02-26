@@ -89,6 +89,8 @@ echo "Library dependencies"
 
 interp="$(${CROSS_COMPILE}readelf -a busybox | grep 'program interpreter' |  sed -n 's/.*: \(.*\)]/\1/p' )"
 SHARED=($(${CROSS_COMPILE}readelf -d busybox | awk -F'[][]' '/NEEDED/ {print $2}'))
+echo "interp: ${interp} "
+echo "SHARED: ${SHARED} "
 
 # TODO: Add library dependencies to rootfs
 if [ -f ${COMPILER_DIR}${interp} ]
