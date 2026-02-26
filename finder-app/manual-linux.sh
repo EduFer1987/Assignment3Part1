@@ -92,6 +92,10 @@ SHARED=($(${CROSS_COMPILE}readelf -d busybox | awk -F'[][]' '/NEEDED/ {print $2}
 echo "interp: ${interp} "
 echo "SHARED: ${SHARED} "
 
+for lib in "${SHARED[@]}"; do
+  find / -type f -name *$lib*
+done
+
 # TODO: Add library dependencies to rootfs
 if [ -f ${COMPILER_DIR}${interp} ]
 then
