@@ -26,7 +26,6 @@ void* threadfunc(void* thread_param)
 
     usleep((unsigned int) ((thread_func_args->wait_to_release_ms)*1000));
     thread_func_args->mutex_lock_rtrn_vle = pthread_mutex_unlock(thread_func_args->mutex_info);
-    printf("After unlock\n");
     if (thread_func_args->mutex_lock_rtrn_vle != 0)
     {
       return thread_func_args;
@@ -44,9 +43,6 @@ bool start_thread_obtaining_mutex(pthread_t *thread, pthread_mutex_t *mutex,int 
      * TODO: allocate memory for thread_data, setup mutex and wait arguments
     */
     struct thread_data *thread_data_inst               = calloc(1, sizeof(struct thread_data));
-    printf("'%d'\n", function_calls);   
-    printf("wait_to_obtain_ms: %d\n", wait_to_obtain_ms); 
-    printf("wait_to_release_ms: %d\n", wait_to_release_ms);
     if (NULL == thread_data_inst)
     {
       return false;
@@ -65,13 +61,11 @@ bool start_thread_obtaining_mutex(pthread_t *thread, pthread_mutex_t *mutex,int 
      */
     if ( pthread_create(thread, NULL, threadfunc, thread_data_inst) != 0)
     {
-      printf("If\n");
       free(thread_data_inst);
       return false;
     }
     else
     {
-      printf("Else\n");
       thread_data_inst[0].thread = thread;
       return true;
     }
